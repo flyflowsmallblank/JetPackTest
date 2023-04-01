@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_nav_home"
+        android:title="首页"
+        android:icon="@drawable/bottom_navi_home"
+        />
+    <item
+        android:id="@+id/bottom_nav_find"
+        android:title="广场"
+        android:icon="@drawable/bottom_navi_find"
+        />
+    <item
+        android:id="@+id/bottom_nav_wechat"
+        android:title="公众号"
+        android:icon="@drawable/bottom_navi_usercircle"
+        />
+
+</menu>
