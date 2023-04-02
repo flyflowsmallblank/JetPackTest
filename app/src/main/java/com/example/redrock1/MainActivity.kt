@@ -1,10 +1,12 @@
 package com.example.redrock1
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.redrock1.adpter.RecycleViewAdapter
@@ -30,8 +32,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        mBinding.viewPager2.setPadding(0,getStatusBarHeight(),0,0)
         initViewpager()
-
     }
 
     private fun initViewpager() {
@@ -62,5 +64,16 @@ class MainActivity : AppCompatActivity() {
             }
             return@setOnItemSelectedListener true
         }
+    }
+
+    @SuppressLint("InternalInsetResource")
+    private fun getStatusBarHeight() : Int{
+        var result : Int = 0
+        //获得状态栏高度的id
+        val resourceId : Int = resources.getIdentifier("status_bar_height","dimen","android")
+        if (resourceId>0){
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
     }
 }

@@ -32,8 +32,6 @@ class Fragment1 : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mFragment1Binding.webView.visibility = View.GONE
-        mFragment1Binding.rvMain.setPadding(0,getStatusBarHeight(),0,0);  //设置标题栏目远离状态栏,和状态栏分离
-        mFragment1Binding.webView.setPadding(0,getStatusBarHeight(),0,0);  //设置标题栏目远离状态栏,和状态栏分离
         mHandler = MyHandler()
         disposeAndConnection("https://www.wanandroid.com/article/list/1/json")
     }
@@ -139,16 +137,5 @@ class Fragment1 : Fragment() {
             jsonDecode(respondData)
             Log.d("lx", "responseData: $messageList")
         }
-    }
-
-    @SuppressLint("InternalInsetResource")
-    private fun getStatusBarHeight() : Int{
-        var result : Int = 0
-        //获得状态栏高度的id
-        val resourceId : Int = resources.getIdentifier("status_bar_height","dimen","android")
-        if (resourceId>0){
-            result = resources.getDimensionPixelSize(resourceId)
-        }
-        return result
     }
 }
