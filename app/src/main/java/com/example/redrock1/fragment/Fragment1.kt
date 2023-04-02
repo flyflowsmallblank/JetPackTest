@@ -1,16 +1,18 @@
 package com.example.redrock1.fragment
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.redrock1.CallBack
+import com.example.redrock1.OnItemClickListener
 import com.example.redrock1.adpter.RecycleViewAdapter
 import com.example.redrock1.databinding.Fragment1Binding
 import com.example.redrock1.pojo.MessageInfo
@@ -22,7 +24,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 
-
 class Fragment1 : Fragment() {
     private var mHandler : Fragment1.MyHandler? = null
     private var messageList : ArrayList<MessageInfo> = ArrayList()
@@ -30,10 +31,25 @@ class Fragment1 : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mFragment1Binding.webView.visibility = View.GONE
         mHandler = MyHandler()
         disposeAndConnection("https://www.wanandroid.com/article/list/1/json")
-        mFragment1Binding.rvMain.adapter = RecycleViewAdapter(messageList)
-        mFragment1Binding.rvMain.layoutManager = LinearLayoutManager(activity)
+    }
+
+    private fun initOnItemClickListener(recycleViewAdapter: RecycleViewAdapter) {
+        recycleViewAdapter.mOnItemClickListener = object : OnItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+                startIntent(position)
+                mFragment1Binding.webView.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun startIntent(position: Int) {
+        mFragment1Binding.webView.settings.javaScriptEnabled = true
+        mFragment1Binding.webView.webViewClient = WebViewClient()
+        mFragment1Binding.webView.loadUrl(messageList[position].link)
     }
 
     //加载xml布局
@@ -42,10 +58,6 @@ class Fragment1 : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return mFragment1Binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 
     private fun disposeAndConnection(url: String){
@@ -107,8 +119,14 @@ class Fragment1 : Fragment() {
                 messageInfo.title = jo2.getString("title")
                 messageList.add(messageInfo)
             }
+            Log.d("lx", "jsonDecode: 这个没报错-----109")
         }catch (je:Exception){
             je.printStackTrace()
+        }finally {
+            mFragment1Binding.rvMain.adapter = RecycleViewAdapter(messageList)
+            mFragment1Binding.rvMain.layoutManager = LinearLayoutManager(activity)
+            mFragment1Binding.rvMain.addItemDecoration(DividerItemDecoration(activity,DividerItemDecoration.VERTICAL))
+            initOnItemClickListener(mFragment1Binding.rvMain.adapter as RecycleViewAdapter)
         }
     }
 
