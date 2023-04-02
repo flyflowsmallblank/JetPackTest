@@ -12,7 +12,7 @@ import com.example.redrock1.pojo.MessageInfo
 class RecycleViewAdapter(var data : ArrayList<MessageInfo>) : RecyclerView.Adapter<RecycleViewAdapter.InnerHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InnerHolder {
-        return InnerHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recycle_view_home,parent,false));
+        return InnerHolder(LayoutInflater.from(parent.context).inflate(R.layout.recycle_view_home,parent,false));
     }
 
     override fun onBindViewHolder(holder: InnerHolder, position: Int) {
