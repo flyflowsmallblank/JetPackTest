@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redrock1.OnItemClickListener
 import com.example.redrock1.adpter.Frag3RvAdapter
-import com.example.redrock1.adpter.RecycleViewAdapter
+import com.example.redrock1.adpter.Frag1Adapter
 import com.example.redrock1.databinding.Fragment3Binding
 import com.example.redrock1.pojo.MessageInfo
 import com.example.redrock1.pojo.WeChat
@@ -29,6 +29,7 @@ class Fragment3 : Fragment() {
     private val mFragment3Binding : Fragment3Binding by lazy { Fragment3Binding.inflate(layoutInflater) }
     private val mNetRequest : NetRequest = NetRequest()
     private var messageList : ArrayList<MessageInfo> = ArrayList()
+    private var jsonNumber : Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,18 +89,21 @@ class Fragment3 : Fragment() {
     }
 
     private fun disposeJsonDecode(json: String) {
-        if(json.matches(".+\"datas\".+".toRegex())){
-            jsonDecodeDetail(json)
-        }else{
+        if(jsonNumber == 1){
+            jsonNumber++
+            //第一层解析
             jsonDecode(json)
+        }else if (jsonNumber == 2){
+            //第二层解析
+            jsonDecodeDetail(json)
         }
     }
 
     private fun jsonDecodeDetail(json: String) {
         try {
-            var jsonObject : JSONObject = JSONObject(json)
-            var jsonObject1 = jsonObject.getJSONObject("data")
-            var jsonArray = jsonObject1.getJSONArray("datas")
+            val jsonObject : JSONObject = JSONObject(json)
+            val jsonObject1 = jsonObject.getJSONObject("data")
+            val jsonArray = jsonObject1.getJSONArray("datas")
             var messageInfo : MessageInfo? = null
             for (i in 0 until jsonArray.length()){
                 var jo2 = jsonArray.getJSONObject(i)
@@ -108,19 +112,19 @@ class Fragment3 : Fragment() {
                 messageInfo.title = jo2.getString("title")
                 messageList.add(messageInfo)
             }
-            Log.d("lx", "jsonDecode: 这个没报错-----109")
+            Log.d("lx", "jsonDecode: 这个没报错-----115")
         }catch (je:Exception){
             je.printStackTrace()
         }finally {
-            mFragment3Binding.frag3Rv.adapter = RecycleViewAdapter(messageList)
+            mFragment3Binding.frag3Rv.adapter = Frag1Adapter(messageList)
             mFragment3Binding.frag3Rv.layoutManager = LinearLayoutManager(activity)
             mFragment3Binding.frag3Rv.addItemDecoration(DividerItemDecoration(activity,DividerItemDecoration.VERTICAL))
-            initOnItemClickListener(mFragment3Binding.frag3Rv.adapter as Frag3RvAdapter)
+            initOnItemClickListenerDetail(mFragment3Binding.frag3Rv.adapter as Frag1Adapter)
         }
     }
 
-    private fun initOnItemClickListener(frag3RvAdapter: Frag3RvAdapter) {
-        frag3RvAdapter.mOnItemClickListener = object : OnItemClickListener {
+    private fun initOnItemClickListenerDetail(recycleViewAdapter: Frag1Adapter) {
+        recycleViewAdapter.mOnItemClickListener = object : OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 startIntent(position)
                 mFragment3Binding.webView3.visibility = View.VISIBLE
@@ -128,21 +132,28 @@ class Fragment3 : Fragment() {
         }
     }
 
+    private fun initOnItemClickListener(frag3RvAdapter: Frag3RvAdapter) {
+        frag3RvAdapter.mOnItemClickListener = object : OnItemClickListener {
+            override fun onItemClick(view: View, position: Int) {
+                var url : StringBuilder = StringBuilder("https://wanandroid.com/wxarticle/list/")
+                url.append(weChatList[position].id.toString())
+                url.append("/")
+                url.append(webViewNumber)
+                webViewNumber++
+                url.append("/")
+                url.append("json")
+                url.append("/")
+                Log.d("lx", "startIntent: 公众号网络拼接结果，第一层次，马上进入第二层")
+                mHandler?.let { mNetRequest.startConnection(url.toString(), it) }
+            }
+        }
+    }
+
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun startIntent(position: Int) {
-        //https://wanandroid.com/wxarticle/list/408/1/json
-        var url : StringBuilder = StringBuilder("https://wanandroid.com/wxarticle/list/")
-        url.append(weChatList[position].id.toString())
-        url.append("/")
-        url.append(webViewNumber)
-        webViewNumber++
-        url.append("/")
-        url.append("json")
-        url.append("/")
-        Log.d("lx", "startIntent: 公众号网络拼接结果")
-        mHandler?.let { mNetRequest.startConnection(url.toString(), it) }
         mFragment3Binding.webView3.settings.javaScriptEnabled = true
         mFragment3Binding.webView3.webViewClient = WebViewClient()
-        mFragment3Binding.webView3.loadUrl(url.toString())
+        mFragment3Binding.webView3.loadUrl(messageList[position].link.toString())
     }
 }

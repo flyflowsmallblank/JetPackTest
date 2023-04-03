@@ -2,27 +2,13 @@ package com.example.redrock1
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.DividerItemDecoration
-import com.example.redrock1.adpter.RecycleViewAdapter
 import com.example.redrock1.adpter.Viewpager2Adapter
 import com.example.redrock1.databinding.ActivityMainBinding
 import com.example.redrock1.fragment.Fragment1
 import com.example.redrock1.fragment.Fragment2
 import com.example.redrock1.fragment.Fragment3
-import com.example.redrock1.pojo.MessageInfo
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 class MainActivity : AppCompatActivity() {
