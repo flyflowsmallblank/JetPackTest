@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.redrock1.adpter.Viewpager2Adapter
+import com.example.redrock1.adpter.MainVpAdapter
 import com.example.redrock1.databinding.ActivityMainBinding
 import com.example.redrock1.fragment.Fragment1
 import com.example.redrock1.fragment.Fragment2
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 return Fragment3()
             }
         })
-        mBinding.viewPager2.adapter = Viewpager2Adapter(fragments,this)
+        mBinding.viewPager2.adapter = MainVpAdapter(fragments,this)
         mBinding.bottomNavi.setOnItemSelectedListener {
             when(it.itemId){
                 //todo 需要等到fragment整好之后再来处理跳转

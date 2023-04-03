@@ -11,7 +11,7 @@ import com.example.redrock1.R
 import com.example.redrock1.pojo.MessageInfo
 
 
-class Frag1Adapter(var data : ArrayList<MessageInfo>) : RecyclerView.Adapter<Frag1Adapter.InnerHolder>() {
+class Frag1RvAdapter(var data : ArrayList<MessageInfo>) : RecyclerView.Adapter<Frag1RvAdapter.InnerHolder>() {
     var mOnItemClickListener :OnItemClickListener? = null  //这里隐含一个set
         set(value) {field = value}
 

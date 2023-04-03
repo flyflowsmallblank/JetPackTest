@@ -8,7 +8,7 @@ import com.example.redrock1.BackInterface
 
 
 
-class Viewpager2Adapter(val fragments:ArrayList<BackInterface>,activity: FragmentActivity) : FragmentStateAdapter(activity) {
+class MainVpAdapter(val fragments:ArrayList<BackInterface>, activity: FragmentActivity) : FragmentStateAdapter(activity) {
 
     override fun createFragment(position: Int): Fragment {
         return fragments[position].back()

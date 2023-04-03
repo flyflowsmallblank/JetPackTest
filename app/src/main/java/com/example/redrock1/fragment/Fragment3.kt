@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redrock1.OnItemClickListener
 import com.example.redrock1.adpter.Frag3RvAdapter
-import com.example.redrock1.adpter.Frag1Adapter
+import com.example.redrock1.adpter.Frag1RvAdapter
 import com.example.redrock1.databinding.Fragment3Binding
 import com.example.redrock1.pojo.MessageInfo
 import com.example.redrock1.pojo.WeChat
@@ -116,14 +116,14 @@ class Fragment3 : Fragment() {
         }catch (je:Exception){
             je.printStackTrace()
         }finally {
-            mFragment3Binding.frag3Rv.adapter = Frag1Adapter(messageList)
+            mFragment3Binding.frag3Rv.adapter = Frag1RvAdapter(messageList)
             mFragment3Binding.frag3Rv.layoutManager = LinearLayoutManager(activity)
             mFragment3Binding.frag3Rv.addItemDecoration(DividerItemDecoration(activity,DividerItemDecoration.VERTICAL))
-            initOnItemClickListenerDetail(mFragment3Binding.frag3Rv.adapter as Frag1Adapter)
+            initOnItemClickListenerDetail(mFragment3Binding.frag3Rv.adapter as Frag1RvAdapter)
         }
     }
 
-    private fun initOnItemClickListenerDetail(recycleViewAdapter: Frag1Adapter) {
+    private fun initOnItemClickListenerDetail(recycleViewAdapter: Frag1RvAdapter) {
         recycleViewAdapter.mOnItemClickListener = object : OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 startIntent(position)

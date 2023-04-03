@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redrock1.OnItemClickListener
-import com.example.redrock1.adpter.Frag1Adapter
+import com.example.redrock1.adpter.Frag1RvAdapter
 import com.example.redrock1.databinding.Fragment1Binding
 import com.example.redrock1.pojo.MessageInfo
 import com.example.redrock1.util.NetRequest
@@ -34,7 +34,7 @@ class Fragment1 : Fragment() {
         disposeAndConnection("https://www.wanandroid.com/article/list/")
     }
 
-    private fun initOnItemClickListener(recycleViewAdapter: Frag1Adapter) {
+    private fun initOnItemClickListener(recycleViewAdapter: Frag1RvAdapter) {
         recycleViewAdapter.mOnItemClickListener = object : OnItemClickListener {
             override fun onItemClick(view: View, position: Int) {
                 startIntent(position)
@@ -85,10 +85,10 @@ class Fragment1 : Fragment() {
         }catch (je:Exception){
             je.printStackTrace()
         }finally {
-            mFragment1Binding.rvMain.adapter = Frag1Adapter(messageList)
+            mFragment1Binding.rvMain.adapter = Frag1RvAdapter(messageList)
             mFragment1Binding.rvMain.layoutManager = LinearLayoutManager(activity)
             mFragment1Binding.rvMain.addItemDecoration(DividerItemDecoration(activity,DividerItemDecoration.VERTICAL))
-            initOnItemClickListener(mFragment1Binding.rvMain.adapter as Frag1Adapter)
+            initOnItemClickListener(mFragment1Binding.rvMain.adapter as Frag1RvAdapter)
         }
     }
 
