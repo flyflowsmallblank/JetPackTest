@@ -5,10 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".fragment.Fragment3">
 
-    <TextView
-        android:id="@+id/frag_wechat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="这个是朋友圈"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/frag3_rv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <WebView
+        android:id="@+id/web_view3"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

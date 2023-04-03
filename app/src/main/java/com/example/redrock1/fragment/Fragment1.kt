@@ -16,24 +16,22 @@ import com.example.redrock1.OnItemClickListener
 import com.example.redrock1.adpter.RecycleViewAdapter
 import com.example.redrock1.databinding.Fragment1Binding
 import com.example.redrock1.pojo.MessageInfo
+import com.example.redrock1.util.NetRequest
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
 
 
 class Fragment1 : Fragment() {
     private var mHandler : Fragment1.MyHandler? = null
     private var messageList : ArrayList<MessageInfo> = ArrayList()
     private val mFragment1Binding : Fragment1Binding by lazy { Fragment1Binding.inflate(layoutInflater) }
+    private var webViewNumber = 0
+    private val mNetRequest : NetRequest = NetRequest()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mFragment1Binding.webView.visibility = View.GONE
         mHandler = MyHandler()
-        disposeAndConnection("https://www.wanandroid.com/article/list/1/json")
+        disposeAndConnection("https://www.wanandroid.com/article/list/")
     }
 
     private fun initOnItemClickListener(recycleViewAdapter: RecycleViewAdapter) {
@@ -61,49 +59,13 @@ class Fragment1 : Fragment() {
     }
 
     private fun disposeAndConnection(url: String){
-        startConnection(url)
-    }
-
-    private fun startConnection(url : String){
-        Thread {
-            try {
-                val mUrl = URL(url)
-                val connection = mUrl.openConnection() as HttpURLConnection
-                connection.requestMethod = "GET"
-                connection.connectTimeout = 8000
-                connection.readTimeout = 8000
-                connection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.9")
-                connection.connect()
-                val inputStream = connection.inputStream
-                val responseData = streamToString(inputStream)
-                val message: Message = Message()
-                message.obj = responseData
-                Log.d("lx", "responseData: $responseData")
-                mHandler?.sendMessage(message)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }.start()
-    }
-
-    private fun streamToString(inputStream: InputStream): String{
-        val sb : StringBuilder = StringBuilder()
-        var oneLine : String?
-        val reader : BufferedReader = BufferedReader(InputStreamReader(inputStream))
-        try {
-            while ((reader.readLine()).also { oneLine = it } != null){
-                sb.append(oneLine).append('\n')
-            }
-        }catch (e : Exception){
-            e.printStackTrace()
-        }finally {
-            try {
-                reader.close()
-            }catch (e : Exception){
-                e.printStackTrace()
-            }
-        }
-        return sb.toString()
+        var str : StringBuilder = StringBuilder(url)
+        str.append(webViewNumber.toString())
+        webViewNumber++
+        str.append("/")
+        str.append("json")
+        str.append("/")
+        mHandler?.let { mNetRequest.startConnection(str.toString(), it) }
     }
 
     private fun jsonDecode(json : String){
