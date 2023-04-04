@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.redrock1.OnItemClickListener
@@ -19,22 +20,21 @@ import com.example.redrock1.databinding.Fragment3Binding
 import com.example.redrock1.pojo.MessageInfo
 import com.example.redrock1.pojo.WeChat
 import com.example.redrock1.util.NetRequest
+import com.example.redrock1.util.NetRequestPlus
 import org.json.JSONArray
 import org.json.JSONObject
 
 class Fragment3 : Fragment() {
-    private var mHandler : Fragment3.MyHandler? = null
     private var weChatList : ArrayList<WeChat> = ArrayList()
     private var webViewNumber = 0
     private val mFragment3Binding : Fragment3Binding by lazy { Fragment3Binding.inflate(layoutInflater) }
-    private val mNetRequest : NetRequest = NetRequest()
     private var messageList : ArrayList<MessageInfo> = ArrayList()
     private var jsonNumber : Int = 1
+    private val mViewModel by lazy { ViewModelProvider(this)[NetRequestPlus::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mFragment3Binding.webView3.visibility = View.GONE
-        mHandler = MyHandler()
         disposeAndConnection("https://wanandroid.com/wxarticle/chapters/json")
     }
 
@@ -46,9 +46,15 @@ class Fragment3 : Fragment() {
         return mFragment3Binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mViewModel.homeLiveData.observe(viewLifecycleOwner){
+            disposeJsonDecode(it)
+        }
+    }
 
     private fun disposeAndConnection(url: String){
-        mHandler?.let { mNetRequest.startConnection(url.toString(), it) }
+        mViewModel.getHomeData(url)
     }
 
     private fun jsonDecode(json : String){
@@ -76,15 +82,6 @@ class Fragment3 : Fragment() {
             if(adapter is Frag3RvAdapter){
                 initOnItemClickListener(adapter)
             }
-        }
-    }
-
-    private inner class MyHandler : Handler(){
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            val respondData = msg.obj.toString()
-            disposeJsonDecode(respondData)
-            Log.d("lx", "responseData: $weChatList")
         }
     }
 
@@ -144,7 +141,7 @@ class Fragment3 : Fragment() {
                 url.append("json")
                 url.append("/")
                 Log.d("lx", "startIntent: 公众号网络拼接结果，第一层次，马上进入第二层")
-                mHandler?.let { mNetRequest.startConnection(url.toString(), it) }
+                mViewModel.getHomeData(url.toString())
             }
         }
     }

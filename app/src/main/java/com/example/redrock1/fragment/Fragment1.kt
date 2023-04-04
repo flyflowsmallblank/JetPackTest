@@ -28,9 +28,6 @@ class Fragment1 : Fragment() {
     private var messageList : ArrayList<MessageInfo> = ArrayList()
     private val mFragment1Binding : Fragment1Binding by lazy { Fragment1Binding.inflate(layoutInflater) }
     private var webViewNumber = 0
-    private val mNetRequestPlus : NetRequestPlus
-        get() = _netRequestPlus
-    private val _netRequestPlus = NetRequestPlus()
     private val mViewModel by lazy { ViewModelProvider(this)[NetRequestPlus::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +78,7 @@ class Fragment1 : Fragment() {
         str.append("/")
         str.append("json")
         str.append("/")
-        mNetRequestPlus.getHomeData(str.toString())
+        mViewModel.getHomeData(str.toString())
     }
 
     private fun jsonDecode(json : String){
