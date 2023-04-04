@@ -16,7 +16,6 @@ class Fragment2 : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_2, container, false)
     }
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
+
+    // TODO: 手搓fragment3，这个思路需要对，内容可以不自己写
 }
