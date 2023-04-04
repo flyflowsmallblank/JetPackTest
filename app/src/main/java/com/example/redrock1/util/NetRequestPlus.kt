@@ -13,24 +13,20 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * T 定义返回数据的类型
+ * 返回字符串，需要自己解析json
  */
 
-class NetRequestPlus<T> : ViewModel() {
-    private var mHandler : MyHandler? = null
-    val homeLiveData : LiveData<ArrayList<T>>
+class NetRequestPlus : ViewModel() {
+    private var mHandler : MyHandler = MyHandler()
+    val homeLiveData : LiveData<String>
         get() = _mutableHomeLiveDate
-    private val _mutableHomeLiveDate = MutableLiveData<ArrayList<T>>()
-    //定义返回数据的集合
-    val arrayList : ArrayList<T>
-        get() = _arrayList
-    private val _arrayList = ArrayList<T>()
+    private val _mutableHomeLiveDate = MutableLiveData<String>()
 
-    fun getHomeData(url : String,jsonDecode : (String,ArrayList<T>) -> ArrayList<T>){
-        startConnection(url, jsonDecode)
+    fun getHomeData(url: String){
+        startConnection(url)
     }
 
-    private fun startConnection(url : String,jsonDecode : (String,ArrayList<T>) -> ArrayList<T>){
+    private fun startConnection(url : String){
         Thread {
             try {
                 val mUrl = URL(url)
@@ -45,8 +41,7 @@ class NetRequestPlus<T> : ViewModel() {
                 val message: Message = Message()
                 message.obj = responseData
                 Log.d("lx", "responseData: $responseData")
-                mHandler = MyHandler(jsonDecode)
-                mHandler?.sendMessage(message)
+                mHandler.sendMessage(message)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -72,12 +67,12 @@ class NetRequestPlus<T> : ViewModel() {
         return sb.toString()
     }
 
-    private inner class MyHandler(val jsonDecode : (String,ArrayList<T>) -> ArrayList<T>) : Handler(){
+    private inner class MyHandler() : Handler(){
         override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
             val respondData = msg.obj.toString()
-            jsonDecode(respondData,arrayList)
-            _mutableHomeLiveDate.value = arrayList
+            _mutableHomeLiveDate.value = respondData
+            Log.d("lx", "handleMessage: 设置value的值设置成功")
         }
     }
 }
